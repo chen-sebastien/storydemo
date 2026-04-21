@@ -215,7 +215,7 @@ const player = {
     x: 50,
     y: 50,
     radius: 12,
-    speed: 1.75, 
+    speed: 7.0, 
     spawnX: 50,
     spawnY: 50,
     angle: 0 // 俯視圖旋轉角度
@@ -309,11 +309,11 @@ function loadLevel(levelNumber) {
         puzzles.push({ x: 200, y: cy, size: 16, collected: false, text: "又是一天相同的起點，腳步卻比昨日更重。" });
         puzzles.push({ x: 700, y: cy + 150, size: 16, collected: false, text: "這些推不動的陰影，是我親手壘砌的負罪感。" });
         wolves.push({
-            x: 450, y: cy - 250, radius: 14, speed_patrol: 0.75, speed_chase: 1.9, state: 'PATROL', sightRange: 350,
-            patrolPoints: [{x: 500, y: cy - 250}, {x: 850, y: cy - 250}], currentPointIdx: 0, pauseTimer: 0, angle: 0
+            x: 450, y: cy - 300, radius: 14, speed_patrol: 1.8, speed_chase: 4.6, state: 'PATROL', sightRange: 350,
+            patrolPoints: [{x: 500, y: cy - 300}, {x: 850, y: cy - 300}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
         wolves.push({
-            x: 750, y: cy + 250, radius: 14, speed_patrol: 0.75, speed_chase: 1.9, state: 'PATROL', sightRange: 350,
+            x: 750, y: cy + 250, radius: 14, speed_patrol: 1.8, speed_chase: 4.6, state: 'PATROL', sightRange: 350,
             patrolPoints: [{x: 650, y: cy + 250}, {x: 1000, y: cy + 250}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
 
@@ -324,11 +324,11 @@ function loadLevel(levelNumber) {
         puzzles.push({ x: 1300, y: cy - 150, size: 16, collected: false, text: "焦慮如同野犬，正嗅著我逃避時留下的氣味。" });
         puzzles.push({ x: 1950, y: cy - 150, size: 16, collected: false, text: "機械式的勞動，是為了掩蓋靈魂深處巨大的空洞。" });
         wolves.push({
-            x: 1600, y: cy - 100, radius: 14, speed_patrol: 0.85, speed_chase: 2.1, state: 'PATROL', sightRange: 380, 
+            x: 1600, y: cy - 100, radius: 14, speed_patrol: 2.0, speed_chase: 5.0, state: 'PATROL', sightRange: 380, 
             patrolPoints: [{x: 1350, y: cy - 100}, {x: 1750, y: cy - 100}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
         wolves.push({
-            x: 1700, y: cy + 250, radius: 14, speed_patrol: 0.85, speed_chase: 2.1, state: 'PATROL', sightRange: 380,
+            x: 1700, y: cy + 250, radius: 14, speed_patrol: 2.0, speed_chase: 5.0, state: 'PATROL', sightRange: 380,
             patrolPoints: [{x: 1100, y: cy + 250}, {x: 2000, y: cy + 250}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
 
@@ -340,11 +340,11 @@ function loadLevel(levelNumber) {
         
         puzzles.push({ x: 3800, y: cy, size: 16, collected: false, text: "我持續推著無形的巨石，卻早就忘了山頂在哪裡。" });
         wolves.push({
-            x: 2750, y: cy, radius: 14, speed_patrol: 0.9, speed_chase: 2.3, state: 'PATROL', sightRange: 420, 
+            x: 2750, y: cy, radius: 14, speed_patrol: 2.2, speed_chase: 5.5, state: 'PATROL', sightRange: 420, 
             patrolPoints: [{x: 2750, y: cy}, {x: 3250, y: cy}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
         wolves.push({
-            x: 3550, y: cy - 350, radius: 14, speed_patrol: 1.0, speed_chase: 2.3, state: 'PATROL', sightRange: 420,
+            x: 3550, y: cy - 350, radius: 14, speed_patrol: 2.4, speed_chase: 5.5, state: 'PATROL', sightRange: 420,
             patrolPoints: [{x: 3550, y: cy - 350}, {x: 3550, y: cy + 350}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
 
@@ -716,8 +716,8 @@ function update(dt) {
                     bossBird.targetY = Math.random() * (canvas.height - 200) + 100;
                 }
             } else {
-                bossBird.x += (bdx / distToTarget) * 1.5 * dt; 
-                bossBird.y += (bdy / distToTarget) * 1.5 * dt;
+                bossBird.x += (bdx / distToTarget) * 3.6 * dt; 
+                bossBird.y += (bdy / distToTarget) * 3.6 * dt;
                 bossBird.y += Math.sin(Date.now() / 800) * 0.5; // Date.now() 本身就與影格無關，故不需 dt
                 
                 // 平滑轉向 (根據巡航目標)
@@ -763,8 +763,8 @@ function update(dt) {
             let bdist = Math.hypot(bdx, bdy);
             
             // 像狼一樣持續不休的反覆追蹤，速度設定為具威脅性的穩定步調
-            bossBird.x += (bdx/bdist) * 3.8 * dt;
-            bossBird.y += (bdy/bdist) * 3.8 * dt;
+            bossBird.x += (bdx/bdist) * 9.1 * dt;
+            bossBird.y += (bdy/bdist) * 9.1 * dt;
             
             // 平滑轉向 (根據玩家位置)
             let targetAngle = Math.atan2(bdy, bdx);
@@ -828,7 +828,7 @@ function update(dt) {
     // --- 敵人 AI 系統 (Wolves) ---
     wolves.forEach(wolf => {
         if (wolf.pauseTimer > 0) {
-            wolf.pauseTimer--;
+            wolf.pauseTimer -= dt; // 修正為依據時間遞減
             return; 
         }
     
@@ -857,8 +857,8 @@ function update(dt) {
 
         if (wolf.state === 'CHASE') {
             let angle = Math.atan2(player.y - wolf.y, player.x - wolf.x);
-            wolf_dx = Math.cos(angle) * wolf.speed_chase;
-            wolf_dy = Math.sin(angle) * wolf.speed_chase;
+            wolf_dx = Math.cos(angle) * wolf.speed_chase * dt; // 補上 dt 縮放
+            wolf_dy = Math.sin(angle) * wolf.speed_chase * dt;
         } else {
             let target = wolf.patrolPoints[wolf.currentPointIdx];
             let dist = Math.hypot(target.x - wolf.x, target.y - wolf.y);
@@ -867,8 +867,8 @@ function update(dt) {
                 wolf.pauseTimer = 45; 
             } else {
                 let angle = Math.atan2(target.y - wolf.y, target.x - wolf.x);
-                wolf_dx = Math.cos(angle) * wolf.speed_patrol;
-                wolf_dy = Math.sin(angle) * wolf.speed_patrol;
+                wolf_dx = Math.cos(angle) * wolf.speed_patrol * dt; // 補上 dt 縮放
+                wolf_dy = Math.sin(angle) * wolf.speed_patrol * dt;
             }
         }
         // 更新狼的旋轉角度 (平滑轉向)
@@ -876,7 +876,7 @@ function update(dt) {
         let diff = targetAngle - wolf.angle;
         while (diff < -Math.PI) diff += Math.PI * 2;
         while (diff > Math.PI) diff -= Math.PI * 2;
-        wolf.angle += diff * 0.1;
+        wolf.angle += diff * 0.1 * dt; // 補上 dt 縮放
 
         wolf.x += wolf_dx;
         obstacles.forEach(o => { // 一般方形障礙物
@@ -1128,7 +1128,7 @@ function draw(dt) {
 
         // 翅膀拍動邏輯 (極致降速、極致減小後方振幅以展現史詩翱翔感)
         const isChasing = bossBird.state === 'CHASE';
-        const flapSpeed = isChasing ? 0.04 : 0.015; 
+        const flapSpeed = isChasing ? 0.09 : 0.035; 
         if (!isReading) bossBird.flap += flapSpeed * dt; // 拍動速度同步縮放
         const wingScale = Math.sin(bossBird.flap); // -1 到 1
 
