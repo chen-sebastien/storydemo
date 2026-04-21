@@ -215,7 +215,7 @@ const player = {
     x: 50,
     y: 50,
     radius: 12,
-    speed: 1.75, 
+    speed: 7.0, 
     spawnX: 50,
     spawnY: 50,
     angle: 0 // 俯視圖旋轉角度
@@ -309,8 +309,8 @@ function loadLevel(levelNumber) {
         puzzles.push({ x: 200, y: cy, size: 16, collected: false, text: "又是一天相同的起點，腳步卻比昨日更重。" });
         puzzles.push({ x: 700, y: cy + 150, size: 16, collected: false, text: "這些推不動的陰影，是我親手壘砌的負罪感。" });
         wolves.push({
-            x: 450, y: cy - 250, radius: 14, speed_patrol: 0.75, speed_chase: 1.9, state: 'PATROL', sightRange: 350,
-            patrolPoints: [{x: 500, y: cy - 250}, {x: 850, y: cy - 250}], currentPointIdx: 0, pauseTimer: 0, angle: 0
+            x: 450, y: cy - 300, radius: 14, speed_patrol: 0.75, speed_chase: 1.9, state: 'PATROL', sightRange: 350,
+            patrolPoints: [{x: 500, y: cy - 300}, {x: 850, y: cy - 300}], currentPointIdx: 0, pauseTimer: 0, angle: 0
         });
         wolves.push({
             x: 750, y: cy + 250, radius: 14, speed_patrol: 0.75, speed_chase: 1.9, state: 'PATROL', sightRange: 350,
@@ -828,7 +828,7 @@ function update(dt) {
     // --- 敵人 AI 系統 (Wolves) ---
     wolves.forEach(wolf => {
         if (wolf.pauseTimer > 0) {
-            wolf.pauseTimer--;
+            wolf.pauseTimer -= dt; // 修正為依據時間遞減
             return; 
         }
     
@@ -857,8 +857,8 @@ function update(dt) {
 
         if (wolf.state === 'CHASE') {
             let angle = Math.atan2(player.y - wolf.y, player.x - wolf.x);
-            wolf_dx = Math.cos(angle) * wolf.speed_chase;
-            wolf_dy = Math.sin(angle) * wolf.speed_chase;
+            wolf_dx = Math.cos(angle) * wolf.speed_chase * dt; // 補上 dt 縮放
+            wolf_dy = Math.sin(angle) * wolf.speed_chase * dt;
         } else {
             let target = wolf.patrolPoints[wolf.currentPointIdx];
             let dist = Math.hypot(target.x - wolf.x, target.y - wolf.y);
@@ -867,8 +867,8 @@ function update(dt) {
                 wolf.pauseTimer = 45; 
             } else {
                 let angle = Math.atan2(target.y - wolf.y, target.x - wolf.x);
-                wolf_dx = Math.cos(angle) * wolf.speed_patrol;
-                wolf_dy = Math.sin(angle) * wolf.speed_patrol;
+                wolf_dx = Math.cos(angle) * wolf.speed_patrol * dt; // 補上 dt 縮放
+                wolf_dy = Math.sin(angle) * wolf.speed_patrol * dt;
             }
         }
         // 更新狼的旋轉角度 (平滑轉向)
@@ -876,7 +876,7 @@ function update(dt) {
         let diff = targetAngle - wolf.angle;
         while (diff < -Math.PI) diff += Math.PI * 2;
         while (diff > Math.PI) diff -= Math.PI * 2;
-        wolf.angle += diff * 0.1;
+        wolf.angle += diff * 0.1 * dt; // 補上 dt 縮放
 
         wolf.x += wolf_dx;
         obstacles.forEach(o => { // 一般方形障礙物
