@@ -1,0 +1,159 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0f14;
+    font-family: 'Noto Serif TC', serif;
+    color: #e0e0e0;
+}
+
+/* 暗角效果 (Vignette) 強化壓迫感 */
+#vignette {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, transparent 40%, rgba(5, 5, 10, 0.85) 100%);
+    z-index: 5;
+    transition: background 2s ease, box-shadow 2s ease;
+}
+
+/* 受傷閃動特效 */
+#damage-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(180, 0, 0, 0.35);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.1s ease-out;
+    z-index: 10;
+}
+
+#damage-overlay.active {
+    opacity: 1;
+}
+
+/* 攝影機震動 */
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-2px, -3px) rotate(-1deg); }
+    20% { transform: translate(-4px, 0px) rotate(1deg); }
+    30% { transform: translate(4px, 3px) rotate(0deg); }
+    40% { transform: translate(2px, -2px) rotate(1deg); }
+    50% { transform: translate(-2px, 3px) rotate(-1deg); }
+    60% { transform: translate(-4px, 2px) rotate(0deg); }
+    70% { transform: translate(4px, 2px) rotate(-1deg); }
+    80% { transform: translate(-2px, -2px) rotate(1deg); }
+    90% { transform: translate(2px, 3px) rotate(0deg); }
+    100% { transform: translate(2px, -3px) rotate(-1deg); }
+}
+
+body.shake {
+    animation: shake 0.4s;
+    animation-iteration-count: 2; /* 震兩次，總共 0.8秒 */
+}
+
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: filter 2s ease;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    z-index: 20;
+}
+
+#counter {
+    padding: 30px;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    color: #8a98a5;
+    text-shadow: 0 0 10px rgba(138, 152, 165, 0.3);
+}
+
+#narrative-text {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: #ffffff;
+    padding: 0 10%;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+    transition: opacity 1.0s ease-in-out;
+    opacity: 1;
+}
+
+/* 關卡說明專屬樣式 (毛玻璃) */
+.instruction-box {
+    background: rgba(15, 20, 25, 0.85);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(138, 180, 248, 0.3);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
+}
+
+#narrative-text.hidden {
+    opacity: 0;
+}
+
+/* =========================================================
+   Level 2: The Maze / Psychological Horror Theme Extensions
+   ========================================================= */
+
+body.level-2 #gameCanvas {
+    filter: sepia(0.6) brightness(1.2) contrast(1.1) hue-rotate(-10deg);
+}
+
+body.level-2 #vignette {
+    background: radial-gradient(circle, transparent 25%, rgba(60, 40, 10, 0.95) 100%);
+    box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+}
+
+/* 閱讀/暫停模式：將背景暗化並模糊，凸顯文本 */
+body.reading #gameCanvas {
+    filter: brightness(0.2) blur(4px) grayscale(0.6);
+}
+
+body.level-2.reading #gameCanvas {
+    filter: sepia(0.6) brightness(0.1) blur(4px);
+}
+
+/* 全螢幕壓暗遮罩 */
+#pause-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: 10;
+}
+
+body.reading #pause-overlay {
+    opacity: 1;
+}
+
+/* 讓計數器在閱讀時也同步變暗 */
+body.reading #counter {
+    opacity: 0.1;
+    text-shadow: none;
+    transition: opacity 0.5s ease;
+}
+
